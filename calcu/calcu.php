@@ -93,8 +93,8 @@
                                     <form class="d-flex flex-row" action="" method="post">
                                         <label class="w-25 mt-1 text-center">Select By:</label>
                                         <div class="w-25 mr-2">
-                                            <!-- <input type="radio" id="all" name="etab" value="all">
-                                            <label for="all">All</label><br> -->
+                                            <input type="radio" id="alletab" name="etab" value="all" checked>
+                                            <label for="alletab">All</label><br>
                                             <?php 
                                                 $sql = "SELECT DISTINCT etab FROM students";
                                                 $result = $conn->query($sql);
@@ -104,8 +104,8 @@
                                             ?> 
                                         </div>
                                         <div class="w-25 mr-2">
-                                            <!-- <input type="radio" id="alltype" name="type" value="all">
-                                            <label for="alltype">All</label><br> -->
+                                            <input type="radio" id="alltype" name="type" value="all" checked>
+                                            <label for="alltype">All</label><br>
                                             <?php 
                                                  $sql = "SELECT DISTINCT `type` FROM students";
                                                 $result = $conn->query($sql);
@@ -115,6 +115,8 @@
                                             ?> 
                                         </div>
                                         <div class="w-25 mr-2">
+                                            <input type="radio" id="promoall" name="promo" value="all" checked>
+                                            <label for="promo1">Promo: All</label><br>
                                             <input type="radio" id="promo1" name="promo" value="1">
                                             <label for="promo1">Promo: 1</label><br>
                                             <input type="radio" id="promo2" name="promo" value="2">
@@ -239,13 +241,13 @@
                         <div class="row">
                             <div class="form-group col-sm-12">
                                 <label for="inputText">Etab</label>
-                                <input type="text" class="form-control" name="etab" placeholder="Enter a etab" required value="<?= !empty($_POST['etab']) ? $_POST['etab'] : null ?>">
+                                <input type="text" class="form-control" name="etab" placeholder="Enter a etab" required value="<?= !empty($_POST['etab']) ? ucwords($_POST['etab']) : null ?>">
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-12">
                                 <label for="inputText">Promotion</label>
-                                <input type="text" class="form-control" name="promo" placeholder="Enter a etab" required value="<?= !empty($_POST['promo']) ? $_POST['promo'] : null ?>">
+                                <input type="text" class="form-control" name="promo" placeholder="Enter a etab" required value="<?= !empty($_POST['promo']) ? ucwords($_POST['promo']) : null ?>">
                             </div>
                         </div>
                         <div class="row">

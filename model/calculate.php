@@ -9,7 +9,7 @@
         $toDate = $conn->real_escape_string($_POST['toDate']);
         $promo = $conn->real_escape_string($_POST['promo']);
 
-        if($etab == 'all' && $type == 'all' && empty($promo)){
+        if($etab == 'all' && $type == 'all' && $promo=='all'){
             $select = "SELECT id_admission,nom,prenom,etab,formation,promo,
                             SUM(CASE WHEN cat_fusionee='A' THEN duree ELSE 0 END) a, 
                             SUM(CASE WHEN cat_fusionee='B' THEN duree ELSE 0 END) b, 
@@ -20,7 +20,7 @@
                             WHERE `date` BETWEEN '$fromDate' AND '$toDate' 
                             GROUP BY id_admission" ;
 
-        }elseif($etab != 'all' && $type == 'all' && empty($promo)){
+        }elseif($etab != 'all' && $type == 'all' && $promo == 'all'){
             $select = "SELECT id_admission,nom,prenom,etab,formation,promo,
                             SUM(CASE WHEN cat_fusionee='A' THEN duree ELSE 0 END) a, 
                             SUM(CASE WHEN cat_fusionee='B' THEN duree ELSE 0 END) b, 
@@ -31,7 +31,7 @@
                             WHERE etab LIKE '%$etab%' AND `date` BETWEEN '$fromDate' AND '$toDate' 
                             GROUP BY id_admission" ;
 
-        }elseif($etab == 'all' && $type != 'all' && empty($promo)){
+        }elseif($etab == 'all' && $type != 'all' && $promo == 'all'){
             $select = "SELECT id_admission,nom,prenom,etab,formation,promo,
                             SUM(CASE WHEN cat_fusionee='A' THEN duree ELSE 0 END) a, 
                             SUM(CASE WHEN cat_fusionee='B' THEN duree ELSE 0 END) b, 
@@ -42,7 +42,7 @@
                             WHERE type LIKE '%$type%' AND `date` BETWEEN '$fromDate' AND '$toDate' 
                             GROUP BY id_admission" ;
         
-        }elseif($etab != 'all' && $type == 'all' && $promo){
+        }elseif($etab == 'all' && $type == 'all' && $promo != 'all'){
             $select = "SELECT id_admission,nom,prenom,etab,formation,promo,
                             SUM(CASE WHEN cat_fusionee='A' THEN duree ELSE 0 END) a, 
                             SUM(CASE WHEN cat_fusionee='B' THEN duree ELSE 0 END) b, 
@@ -53,7 +53,7 @@
                             WHERE etab LIKE '%$etab%' AND promo LIKE '%$promo%' AND `date` BETWEEN '$fromDate' AND '$toDate' 
                             GROUP BY id_admission" ;
 
-        }elseif($etab == 'all' && $type != 'all' && empty($promo)){
+        }elseif($etab == 'all' && $type != 'all' && $promo != 'all'){
             $select = "SELECT id_admission,nom,prenom,etab,formation,promo,
                             SUM(CASE WHEN cat_fusionee='A' THEN duree ELSE 0 END) a, 
                             SUM(CASE WHEN cat_fusionee='B' THEN duree ELSE 0 END) b, 
