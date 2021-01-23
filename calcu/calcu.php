@@ -91,39 +91,59 @@
                             <div class="d-flex justify-content-between mb-4">
                                 <div class="w-75" align="left">
                                     <form class="d-flex flex-row" action="" method="post">
-                                        <label class="w-25 mt-1">Select By:</label>
-                                        <select class="custom-select w-25 mr-2" name="etab" required>
-                                            <option disabled selected value="">Select an Etab</option>
-                                            <option value="all">All</option>
+                                        <label class="w-25 mt-1 text-center">Select By:</label>
+                                        <div class="w-25 mr-2">
+                                            <!-- <input type="radio" id="all" name="etab" value="all">
+                                            <label for="all">All</label><br> -->
                                             <?php 
                                                 $sql = "SELECT DISTINCT etab FROM students";
                                                 $result = $conn->query($sql);
-                                               foreach($result as $row){
-                                                   echo "<option value=".$row['etab'].">".$row['etab']."</option>";
-                                               }
-                                            ?>
-                                        </select>
-                                        <select class="custom-select w-25 mr-2" name="type" required>
+                                                foreach($result as $row){
+                                                    echo "<input type='radio' name='etab' id='etab".$row['etab']."' value='".$row['etab']."'> <label for='etab".$row['etab']."'>".$row['etab']."</label><br>";
+                                                }
+                                            ?> 
+                                        </div>
+                                        <div class="w-25 mr-2">
+                                            <!-- <input type="radio" id="alltype" name="type" value="all">
+                                            <label for="alltype">All</label><br> -->
+                                            <?php 
+                                                 $sql = "SELECT DISTINCT `type` FROM students";
+                                                $result = $conn->query($sql);
+                                                foreach($result as $row){
+                                                    echo "<input type='radio' name='type' id='type".$row['type']."' value='".$row['type']."'> <label for='type".$row['type']."'>".$row['type']."</label><br>";
+                                                }
+                                            ?> 
+                                        </div>
+                                        <div class="w-25 mr-2">
+                                            <input type="radio" id="promo1" name="promo" value="1">
+                                            <label for="promo1">Promo: 1</label><br>
+                                            <input type="radio" id="promo2" name="promo" value="2">
+                                            <label for="promo2">Promo: 2</label><br>
+                                            <input type="radio" id="promo3" name="promo" value="3">
+                                            <label for="promo3">Promo: 3</label><br>
+                                            <input type="radio" id="promo4" name="promo" value="4">
+                                            <label for="promo4">Promo: 4</label><br>
+                                            
+                                        </div>
+                                        <!-- <select class="custom-select w-25 mr-2" name="etab" required>
+                                            <option disabled selected value="">Select an Etab</option>
+                                            <option value="all">All</option>
+                                            
+                                        </select> -->
+                                        <!-- <select class="custom-select w-25 mr-2" name="type" required>
                                             <option disabled selected value="">Select a Type</option>
                                             <option value="all">All</option>
-                                            <?php 
-                                                $sql = "SELECT DISTINCT `type` FROM students";
-                                                $result = $conn->query($sql);
-                                               foreach($result as $row){
-                                                   echo "<option value=".$row['type'].">".$row['type']."</option>";
-                                               }
-                                            ?>
-                                        </select>
-                                        <input type='number' class="form-control w-25 mr-2" name="promo" placeholder="Enter promo number">
+               
+                                        </select> -->
+                                        <!-- <input type='number' class="form-control w-25 mr-2" name="promo" placeholder="Enter promo number"> -->
                                         <input type='text' class="form-control w-25 mr-2" id="fromDate" name="fromDate" placeholder="from Date" required>
                                         <input type='text' class="form-control w-25 mr-2" id="toDate" name="toDate" placeholder="to Date" required>
-                                        <div class="mt-1">
+                                        <div class="mt-1 w-25">
                                             <button type="submit" class="btn btn-success btn-sm" name="search">Calculate</button>
+                                            <button class="btn btn-sm btn-primary" align="left" data-toggle='modal' data-target="#addHistory">Save</button>
                                         </div>
-                                        
                                     </form>
                                 </div>
-                                <button class="btn btn-sm btn-primary" data-toggle='modal' data-target="#addHistory">Save</button>
                             </div>
                             <?php if(isset($_POST['search'])): ?>
                             <div class="">
@@ -230,7 +250,7 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-12">
-                                <label for="inputText">year</label>
+                                <label for="inputText">Year</label>
                                 <input type="text" class="form-control" name="year" placeholder="Enter a etab" required value="2020/2021">
                             </div>
                         </div>

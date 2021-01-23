@@ -33,11 +33,11 @@ class PDF extends FPDF{
         $this->Cell(275,20,$title,'LTR',1,'C',true);   
         $this->SetFont('Arial','B',9);
         $this->Cell(275,10,"ANNEE UNIVERSITAIRE ".$year,'LR',1,'C',true);
-        $this->Cell(220,-25,"NOTES D'ASSIDUITE ".$periode." ".$nature." ".$etab,0,1,'C',false);
-        $this->Cell(340,25,": From ".$intervalle,0,1,'C',false);
+        $this->Cell(220,-25,"NOTES D'ASSIDUITE ".$periode." ".$nature." ".$etab." Promo:".$promo,0,1,'C',false);
+        $this->Cell(345,25,": From ".$intervalle,0,1,'C',false);
         $this->SetTextColor(34,43,53);
         $this->Cell(275,4,"Promotion : ".$promo,'LBR',1,'R',true);
-        $this->SetTextColor(236, 239, 244);
+        $this->SetTextColor(34,43,53);
         $this->Cell(200,-10,"Promotion : ".$promo,0,1,'R',false);
         $this->Image('../assets/images/logo.png',15,15,24);
         // Arial bold 
