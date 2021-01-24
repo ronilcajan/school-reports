@@ -115,29 +115,18 @@
                                             ?> 
                                         </div>
                                         <div class="w-25 mr-2">
-                                            <input type="radio" id="promoall" name="promo" value="all" checked>
-                                            <label for="promo1">Promo: All</label><br>
-                                            <input type="radio" id="promo1" name="promo" value="1">
-                                            <label for="promo1">Promo: 1</label><br>
-                                            <input type="radio" id="promo2" name="promo" value="2">
-                                            <label for="promo2">Promo: 2</label><br>
-                                            <input type="radio" id="promo3" name="promo" value="3">
-                                            <label for="promo3">Promo: 3</label><br>
-                                            <input type="radio" id="promo4" name="promo" value="4">
-                                            <label for="promo4">Promo: 4</label><br>
+                                        <input type="radio" id="promoall" name="promo" value="all" checked>
+                                        <label for="promo1">Promo: All</label><br>
+                                        <?php 
+                                                 $sql = "SELECT DISTINCT promo FROM students";
+                                                $result = $conn->query($sql);
+                                                foreach($result as $row){
+                                                    echo "<input type='radio' name='promo' id='promo".$row['promo']."' value='".$row['promo']."'> 
+                                                    <label for='promo".$row['promo']."'>Promo: ".$row['promo']."</label><br>";
+                                                }
+                                            ?> 
                                             
                                         </div>
-                                        <!-- <select class="custom-select w-25 mr-2" name="etab" required>
-                                            <option disabled selected value="">Select an Etab</option>
-                                            <option value="all">All</option>
-                                            
-                                        </select> -->
-                                        <!-- <select class="custom-select w-25 mr-2" name="type" required>
-                                            <option disabled selected value="">Select a Type</option>
-                                            <option value="all">All</option>
-               
-                                        </select> -->
-                                        <!-- <input type='number' class="form-control w-25 mr-2" name="promo" placeholder="Enter promo number"> -->
                                         <input type='text' class="form-control w-25 mr-2" id="fromDate" name="fromDate" placeholder="from Date" required>
                                         <input type='text' class="form-control w-25 mr-2" id="toDate" name="toDate" placeholder="to Date" required>
                                         <div class="mt-1 w-25">

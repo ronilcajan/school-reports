@@ -1,12 +1,7 @@
 <?php 
     include '../server/server.php';
     require_once ('../vendor/autoload.php');
-
-    use \PhpOffice\PhpSpreadsheet\Spreadsheet;
-    use \PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-
-    $error  = array();
-    if (isset($_POST["import"])) {
+if (isset($_POST["import"])) {
 
         $allowedFileType = [
             'application/vnd.ms-excel',
@@ -15,93 +10,64 @@
             "application/octet-stream" ,
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         ];
+    
+    if (in_array($_FILES["file"]["type"], $allowedFileType)) {
+        $newimg = date('dmYHis').str_replace(" ", "", $_FILES['file']['name']);
+        $targetPath = '../uploads/'.basename($newimg);
+        move_uploaded_file($_FILES['file']['tmp_name'], $targetPath);
+        \PhpOffice\PhpSpreadsheet\Calculation\Functions::RETURNDATE_PHP_OBJECT;
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
 
-        if (in_array($_FILES["file"]["type"], $allowedFileType)) {
-            // change img name
-            $newimg = date('dmYHis').str_replace(" ", "", $_FILES['file']['name']);
-            $targetPath = '../uploads/'.basename($newimg);
-            move_uploaded_file($_FILES['file']['tmp_name'], $targetPath);
-
-            $Reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-
-            $spreadSheet = $Reader->load($targetPath);
-            $excelSheet = $spreadSheet->getActiveSheet();
-            $spreadSheetAry = $excelSheet->toArray();
-            $sheetCount = count($spreadSheetAry);
-            $row=1;
-            for ($i = 0; $i <= $sheetCount-1; $i++) {
-
-                if (!empty($spreadSheetAry[$i][0])) {
-                    $id_admission = $conn->real_escape_string($spreadSheetAry[$i][0]);
-                }
-                if (!empty($spreadSheetAry[$i][1])) {
-                    $nom = $conn->real_escape_string($spreadSheetAry[$i][1]);
-                }
-                if (!empty($spreadSheetAry[$i][2])) {
-                    $prenom = $conn->real_escape_string($spreadSheetAry[$i][2]);
-                }
-                if (!empty($spreadSheetAry[$i][3])) {
-                    $etab = $conn->real_escape_string($spreadSheetAry[$i][3]);
-                }
-                if (!empty($spreadSheetAry[$i][4])) {
-                    $formation = $conn->real_escape_string($spreadSheetAry[$i][4]);
-                }
-                if (!empty($spreadSheetAry[$i][5])) {
-                    $promo = $conn->real_escape_string($spreadSheetAry[$i][5]);
-                }
-                if (!empty($spreadSheetAry[$i][6])) {
-                    $seance = $conn->real_escape_string($spreadSheetAry[$i][6]);
-                }
-                if (!empty($spreadSheetAry[$i][7])) {
-                    $type = $conn->real_escape_string($spreadSheetAry[$i][7]);
-                }
-                if (!empty($spreadSheetAry[$i][8])) {
-                    $debut = $conn->real_escape_string($spreadSheetAry[$i][8]);
-                }
-                if (!empty($spreadSheetAry[$i][9])) {
-                    $fin = $conn->real_escape_string($spreadSheetAry[$i][9]);
-                }
-                if (!empty($spreadSheetAry[$i][10])) {
-                    $duree = $conn->real_escape_string($spreadSheetAry[$i][10]);
-                }
-                if (!empty($spreadSheetAry[$i][11])) {
-                    $date = date('Y-m-d', strtotime($conn->real_escape_string($spreadSheetAry[$i][11])));
-                }
-                if (!empty($spreadSheetAry[$i][12])) {
-                    $heure_pointage = $conn->real_escape_string($spreadSheetAry[$i][12]);
-                }
-                if (!empty($spreadSheetAry[$i][13])) {
-                    $categorie = $conn->real_escape_string($spreadSheetAry[$i][13]);
-                }else{
-                    $categorie = '';
-                }
-                if (!empty($spreadSheetAry[$i][14])) {
-                    $enseig = $conn->real_escape_string($spreadSheetAry[$i][14]);
-                }
-                if (!empty($spreadSheetAry[$i][15])) {
-                    $cat_fusionee = $conn->real_escape_string($spreadSheetAry[$i][15]);
-                }
-
-                if($row==1){
-                    $row++;
-                    continue;
-
-                }else{
-                    $insert = "INSERT INTO students (id_admission, nom, prenom, etab, formation, promo, seance, `type`, debut, fin, duree, `date`, heure_pointage, categorie, enseig, cat_fusionee) 
-                                VALUES ('$id_admission','$nom','$prenom','$etab','$formation','$promo','$seance','$type','$debut','$fin','$duree','$date','$heure_pointage','$categorie','$enseig','$cat_fusionee')";	
-                    $conn->query($insert);
-                    $row++;
-                }
-                $_SESSION['message'] = 'Student has been saved!';
-                header('location: ../pages/dashboard.php');
-            }
-        }else{
-            $_SESSION['error'] = 'File not supported!';
-            header('location: ../pages/dashboard.php');
+        $reader->setReadDataOnly(TRUE);
+        $spreadsheet = $reader->load($targetPath); //Load the excel form
+        
+        $worksheet = $spreadsheet->getActiveSheet();
+        $highestRow = $worksheet->getHighestRow(); // total number of rows
+        $highestColumn = $worksheet->getHighestColumn(); // total number of columns
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+        
+        $lines = $highestRow - 2; 
+        if ($lines <= 0) {
+                Exit ('There is no data in the Excel table');
         }
-        $_SESSION['errors'] = $error;
+        
+        $sql = "INSERT INTO students (id_admission, nom, prenom, etab, formation, promo, seance, `type`, debut, fin, duree, `date`, heure_pointage, categorie, enseig, cat_fusionee) VALUES ";
+        
+        for ($row = 2; $row <= $highestRow; ++$row) {
+                $id_admission = $conn->real_escape_string($worksheet->getCellByColumnAndRow(1, $row)->getValue());
+                $nom = $conn->real_escape_string($worksheet->getCellByColumnAndRow(2, $row)->getValue()); 
+                $prenom = $conn->real_escape_string($worksheet->getCellByColumnAndRow(3, $row)->getValue());
+                $etab = $conn->real_escape_string($worksheet->getCellByColumnAndRow(4, $row)->getValue());
+                $formation = $conn->real_escape_string($worksheet->getCellByColumnAndRow(5, $row)->getValue());
+                $promo = $conn->real_escape_string($worksheet->getCellByColumnAndRow(6, $row)->getValue()); 
+                $seance = $conn->real_escape_string($worksheet->getCellByColumnAndRow(7, $row)->getValue());
+                $type = $conn->real_escape_string($worksheet->getCellByColumnAndRow(8, $row)->getValue());
+                $debut = date('m/d/Y H:i:s', ExcelDateToUnix($conn->real_escape_string($worksheet->getCellByColumnAndRow(9, $row)->getValue())));
+                $fin = date('m/d/Y H:i:s', ExcelDateToUnix($conn->real_escape_string($worksheet->getCellByColumnAndRow(10, $row)->getValue()))); 
+                $duree = $conn->real_escape_string($worksheet->getCellByColumnAndRow(11, $row)->getValue());
+                $date = date('Y-m-d', ExcelDateToUnix($conn->real_escape_string($worksheet->getCellByColumnAndRow(12, $row)->getValue())));
+                $heure_pointage =  date('h:i:s A', ExcelDateToUnix($conn->real_escape_string($worksheet->getCellByColumnAndRow(13, $row)->getValue())));
+                $categorie = $conn->real_escape_string($worksheet->getCellByColumnAndRow(14, $row)->getValue()); 
+                $enseig = $conn->real_escape_string($worksheet->getCellByColumnAndRow(15, $row)->getValue());
+                $cat_fusionee = $conn->real_escape_string($worksheet->getCellByColumnAndRow(16, $row)->getValue());
+        
+            $sql .= "('$id_admission','$nom','$prenom','$etab','$formation','$promo','$seance','$type','$debut','$fin','$duree','$date','$heure_pointage','$categorie','$enseig','$cat_fusionee'),";
+        }
+        $sql = rtrim($sql, ","); //Remove the last one,
+        try {
+            $conn->query($sql);
+            $_SESSION['message'] = 'Student has been saved!';
+            header('location: ../pages/dashboard.php');
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        
+    }else{
+        $_SESSION['error'] = 'File not supported!';
         header('location: ../pages/dashboard.php');
     }
-    header('location: ../pages/dashboard.php');
-    $conn->close();
+}
+function ExcelDateToUnix($dateValue = 0) {         
+    return ($dateValue - 25569) * 86400;     
+}
 ?>
