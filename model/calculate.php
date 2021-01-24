@@ -62,7 +62,18 @@
                             SUM(CASE WHEN cat_fusionee='Z' THEN duree ELSE 0 END) z 
                             FROM students 
                             WHERE type LIKE '%$type%' AND promo LIKE '%$promo%' AND `date` BETWEEN '$fromDate' AND '$toDate' 
-                            GROUP BY id_admission" ;                   
+                            GROUP BY id_admission" ;
+
+         }elseif($etab != 'all' && $type == 'all' && $promo != 'all'){
+            $select = "SELECT id_admission,nom,prenom,etab,formation,promo,
+                            SUM(CASE WHEN cat_fusionee='A' THEN duree ELSE 0 END) a, 
+                            SUM(CASE WHEN cat_fusionee='B' THEN duree ELSE 0 END) b, 
+                            SUM(CASE WHEN cat_fusionee='C' THEN duree ELSE 0 END) c, 
+                            SUM(CASE WHEN cat_fusionee='D' THEN duree ELSE 0 END) d, 
+                            SUM(CASE WHEN cat_fusionee='Z' THEN duree ELSE 0 END) z 
+                            FROM students 
+                            WHERE etab LIKE '%$etab%' AND promo LIKE '%$promo%' AND `date` BETWEEN '$fromDate' AND '$toDate' 
+                            GROUP BY id_admission" ;      
 
         }else{
             $select = "SELECT id_admission,nom,prenom,etab,formation,promo,

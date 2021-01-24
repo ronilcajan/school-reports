@@ -25,6 +25,7 @@ class PDF extends FPDF{
         global $intervalle;
         global $year;
         global $promo;
+        global $header;
         $title = 'UNIVERSITE INTERNATIONALE';
         
         $this->SetFont('Arial','B',12);
@@ -43,6 +44,15 @@ class PDF extends FPDF{
         // Arial bold 
         $this->Ln(15);
         // Line break
+        // Header
+        $w = array(50, 30, 30, 30,30, 20, 20, 20,25, 20);
+        $this->SetFillColor(34,43,53);
+        $this->SetTextColor(236, 239, 244);
+        $this->SetFont('Arial','',9);
+        for($i=0;$i<count($header);$i++)
+            $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
+        $this->Ln(7);
+
         parent::Header();
     }
         // Page footer
@@ -62,28 +72,28 @@ class PDF extends FPDF{
         // Column widths
         $w = array(50, 30, 30, 30,30, 20, 20, 20,25, 20);
         // Header
-        $this->SetFillColor(34,43,53);
-        $this->SetTextColor(236, 239, 244);
-        $this->SetFont('Arial','',9);
-        for($i=0;$i<count($header);$i++)
-            $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
-        $this->Ln(7);
-        // Data
+        // $this->SetFillColor(34,43,53);
+        // $this->SetTextColor(236, 239, 244);
+        // $this->SetFont('Arial','',9);
+        // for($i=0;$i<count($header);$i++)
+        //     $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
+        // $this->Ln(7);
         $this->SetTextColor(34,43,5);
-        foreach($data as $row)
-        {
-            $this->Cell($w[0],6,$row['id_admission'],'LRB',false);
-            $this->Cell($w[1],6,$row['nom'],'LRB',false);
-            $this->Cell($w[2],6,$row['prenom'],'LRB',false);
-            $this->Cell($w[3],6,$row['etab'],'LRB',0,'C',false);
-            $this->Cell($w[4],6,$row['formation'],'LRB',0,'C',false);
-            $this->Cell($w[5],6,$row['promo'],'LRB',0,'C',false);
-            $this->Cell($w[6],6,$row['vhr'],'LRB',0,'C',false);
-            $this->Cell($w[7],6,$row['vha'],'LRB',0,'C',false);
-            $this->Cell($w[8],6,$row['percent'],'LRB',0,'C',false);
-            $this->Cell($w[9],6,$row['notes'],'LRB',0,'C',false);
+
+        foreach($data as $row){
+            $this->Cell($w[0],6,$row['id_admission'],1,false);
+            $this->Cell($w[1],6,$row['nom'],1,false);
+            $this->Cell($w[2],6,$row['prenom'],1,false);
+            $this->Cell($w[3],6,$row['etab'],1,0,'C',false);
+            $this->Cell($w[4],6,$row['formation'],'LRTB',0,'C',false);
+            $this->Cell($w[5],6,$row['promo'],1,0,'C',false);
+            $this->Cell($w[6],6,$row['vhr'],1,0,'C',false);
+            $this->Cell($w[7],6,$row['vha'],1,0,'C',false);
+            $this->Cell($w[8],6,$row['percent'],1,0,'C',false);
+            $this->Cell($w[9],6,$row['notes'],1,0,'C',false);
             $this->Ln();
         }
+
         // Closing line
         $this->Cell(array_sum($w),0,'','T');
     }
@@ -147,9 +157,9 @@ if(isset($_POST['addHistory'])){
     if($insert_res){
         $last_id = $conn->insert_id;
 
-        foreach ($data as $data1) {
+        foreach ($data1 as $row) {
             $query 	= "INSERT INTO calculation (history_id, id_admission,nom,prenom, etab, formation, promo,a,b,c,d,z,vhr,vha,percent,notes) 
-                     VALUES ($last_id,'".$row["id_admission"]."','".$row['nom']."','".$row['prenom']."','".$row['etab']."','".$row['formation']."','$promo','".$row['a']."','".$row['b']."','".$row['c']."','".$row['d']."','".$row['z']."','".$row['vhr']."','".$row['vha']."','".$row['percent']."','".$row['notes']."')";	
+                     VALUES ($last_id,'".$row["id_admission"]."','".$row['nom']."','".$row['prenom']."','".$row['etab']."','".$row['formation']."','".$row['promo']."','".$row['a']."','".$row['b']."','".$row['c']."','".$row['d']."','".$row['z']."','".$row['vhr']."','".$row['vha']."','".$row['percent']."','".$row['notes']."')";	
             $conn->query($query);
         }
 

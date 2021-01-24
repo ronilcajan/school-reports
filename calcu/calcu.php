@@ -116,7 +116,7 @@
                                         </div>
                                         <div class="w-25 mr-2">
                                         <input type="radio" id="promoall" name="promo" value="all" checked>
-                                        <label for="promo1">Promo: All</label><br>
+                                        <label for="promoall">Promo: All</label><br>
                                         <?php 
                                                  $sql = "SELECT DISTINCT promo FROM students";
                                                 $result = $conn->query($sql);
@@ -127,8 +127,8 @@
                                             ?> 
                                             
                                         </div>
-                                        <input type='text' class="form-control w-25 mr-2" id="fromDate" name="fromDate" placeholder="from Date" required>
-                                        <input type='text' class="form-control w-25 mr-2" id="toDate" name="toDate" placeholder="to Date" required>
+                                        <input type='text' class="form-control w-25 mr-2" id="fromDate" name="fromDate" placeholder="from(yyyy-mm-dd)" required>
+                                        <input type='text' class="form-control w-25 mr-2" id="toDate" name="toDate" placeholder="to(yyyy-mm-dd)" required>
                                         <div class="mt-1 w-25">
                                             <button type="submit" class="btn btn-success btn-sm" name="search">Calculate</button>
                                             <button class="btn btn-sm btn-primary" align="left" data-toggle='modal' data-target="#addHistory">Save</button>
